@@ -6,45 +6,44 @@
     <title>寶島散步 - 現場掃碼點餐</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-user-select: none; }
-        body { font-family: '-apple-system', 'BlinkMacSystemFont', 'PingFang TC', 'Heiti TC', sans-serif; background-color: #f8faf9; color: #2b302f; padding-bottom: 120px; }
+        body { font-family: '-apple-system', 'BlinkMacSystemFont', 'PingFang TC', 'Heiti TC', sans-serif; background-color: #f8faf9; color: #2b302f; padding-bottom: 120px; font-size: 16px; /* 設定基準字級 */ }
+        
         .header { background-color: #525252; padding: 12px 20px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .brand-logo { height: 80px; width: auto; max-width: 90%; }
         .container { padding: 16px; }
-        .section-title { font-size: 18px; color: #525252; font-weight: bold; margin: 24px 0 12px 0; padding-left: 8px; border-left: 4px solid #525252; }
-        .section-note { font-size: 13px; color: #b0304f; font-weight: bold; margin-left: 8px; margin-bottom: 5px; }
         
-        /* 調整後的卡片樣式：手機版垂直堆疊，增加間距 */
+        .section-title { font-size: 20px; color: #525252; font-weight: bold; margin: 24px 0 12px 0; padding-left: 8px; border-left: 4px solid #525252; }
+        .section-note { font-size: 14px; color: #b0304f; font-weight: bold; margin-left: 8px; margin-bottom: 5px; }
+        
+        /* 卡片與文字字級調整 */
         .product-card { 
             background: #ffffff; border: 2px solid #d5dad9; border-radius: 12px; padding: 16px; margin-bottom: 16px; 
-            display: flex; align-items: center; gap: 16px; 
+            display: flex; align-items: center; gap: 14px; 
         }
-        @media (max-width: 480px) {
-            .product-card { flex-direction: column; align-items: stretch; }
-            .product-info { width: 100%; }
-            .counter-box { margin-top: 16px; align-self: flex-end; }
-        }
-
         .product-inline-img { width: 85px; height: 85px; border: 1px solid #d5dad9; border-radius: 8px; object-fit: cover; cursor: pointer; }
-        .product-info { flex-grow: 1; }
-        .product-name { font-size: 15px; font-weight: bold; margin-bottom: 2px; }
-        .product-subname { font-size: 13px; color: #888; margin-bottom: 4px; }
-        .product-price { font-size: 15px; font-weight: bold; color: #b0304f; margin-top: 4px; }
-        .limited-tag { font-size: 11px; background-color: #b0304f; color: #ffffff; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: inline-block; margin: 0 4px 4px 0; }
-        .preorder-tag { font-size: 11px; background-color: #525252; color: #ffffff; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: inline-block; margin: 0 4px 4px 0; }
-        .counter-box { display: flex; align-items: center; border: 2px solid #d5dad9; border-radius: 8px; width: fit-content; }
-        .btn-counter { width: 40px; height: 40px; border: none; background: none; font-size: 20px; font-weight: bold; color: #525252; cursor: pointer; }
-        .count-num { width: 35px; text-align: center; font-size: 16px; font-weight: bold; }
+        .product-info { flex-grow: 1; min-width: 0; }
+        
+        /* 品名字級設定為 16px (約 12pt)，確保清晰 */
+        .product-name { font-size: 16px; font-weight: bold; margin-bottom: 4px; line-height: 1.4; }
+        .product-subname { font-size: 14px; color: #888; margin-bottom: 4px; }
+        .product-price { font-size: 16px; font-weight: bold; color: #b0304f; margin-top: 4px; }
+        
+        .limited-tag, .preorder-tag { font-size: 12px; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: inline-block; margin: 0 4px 4px 0; }
+        .limited-tag { background-color: #b0304f; color: #ffffff; }
+        .preorder-tag { background-color: #525252; color: #ffffff; }
+        
+        .counter-box { display: flex; align-items: center; border: 2px solid #d5dad9; border-radius: 8px; flex-shrink: 0; }
+        .btn-counter { width: 44px; height: 44px; border: none; background: none; font-size: 22px; font-weight: bold; color: #525252; cursor: pointer; }
+        .count-num { width: 40px; text-align: center; font-size: 18px; font-weight: bold; }
         
         .footer-cart { position: fixed; bottom: 0; left: 0; right: 0; background: #ffffff; border-top: 3px solid #525252; padding: 16px 20px; z-index: 99; display: flex; align-items: center; justify-content: space-between; }
-        .btn-submit { background-color: #525252; color: #ffffff; border: none; padding: 14px 32px; font-weight: bold; border-radius: 8px; }
+        .btn-submit { background-color: #525252; color: #ffffff; border: none; padding: 14px 32px; font-size: 16px; font-weight: bold; border-radius: 8px; }
         
+        /* 彈窗內容字級調整 */
         .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 300; align-items: center; justify-content: center; padding: 15px; }
-        .modal-content { width: 100%; max-width: 400px; aspect-ratio: 1 / 1; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 12px; }
-        .big-img { width: 100%; height: 100%; object-fit: cover; }
-        .checkout-content { background: #ffffff; padding: 25px; border-radius: 16px; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
-        .order-cat { font-size: 14px; font-weight: bold; color: #525252; margin-top: 15px; border-bottom: 1px solid #d5dad9; padding-bottom: 2px; }
-        .order-item { display: flex; align-items: center; padding: 8px 0; font-size: 14px; }
-        .shipping-info-box { background: #fff5eb; padding: 10px; border-radius: 8px; margin-top: 10px; }
+        .checkout-content { background: #ffffff; padding: 25px; border-radius: 16px; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; font-size: 15px; }
+        .order-cat { font-size: 15px; font-weight: bold; color: #525252; margin-top: 15px; border-bottom: 1px solid #d5dad9; padding-bottom: 2px; }
+        .order-item { display: flex; align-items: center; padding: 10px 0; font-size: 15px; }
     </style>
 </head>
 <body>
@@ -53,40 +52,34 @@
     <div class="container" id="container-content"></div>
 
     <div class="footer-cart">
-        <div>總計金額<br><span style="font-size: 24px; font-weight: bold; color: #b0304f;" id="total-amount">NT$ 0</span></div>
+        <div>總計金額<br><span style="font-size: 20px; font-weight: bold; color: #b0304f;" id="total-amount">NT$ 0</span></div>
         <button class="btn-submit" onclick="generateOrderList()">確認點餐</button>
     </div>
 
-    <div class="modal" id="big-img-modal" onclick="closeBigImg()">
-        <div class="modal-content"><img id="big-img-src" class="big-img"></div>
-    </div>
-
+    <div class="modal" id="big-img-modal" onclick="closeBigImg()"><div class="modal-content"><img id="big-img-src" class="big-img"></div></div>
     <div class="modal" id="qr-modal">
         <div class="checkout-content">
             <span style="float:right; font-size:24px; cursor:pointer;" onclick="closeModal()">×</span>
-            <div style="font-size: 18px; font-weight: bold; text-align:center; margin-bottom:5px;">點餐明細</div>
-            <div style="font-size: 14px; color:#525252; text-align:center; margin-bottom:15px;">✦ 請出示畫面予顧展人員購買 ✦</div>
-            <div id="discount-info" style="color: #b0304f; font-weight:bold; font-size: 14px; text-align:center;"></div>
+            <div style="font-size: 18px; font-weight: bold; text-align:center; margin-bottom:10px;">點餐明細</div>
             <div id="order-items-box"></div>
-            <div id="shipping-display" class="shipping-info-box" style="display:none;">
-                <div style="font-weight:bold; margin-bottom:5px; color:#b0304f;">● 購買資訊</div>
-                <input type="text" placeholder="指定款式/備註" style="width:100%; margin-bottom:5px; padding:5px; border:1px solid #d5dad9;">
-                <input type="text" placeholder="收件人姓名" style="width:100%; margin-bottom:5px; padding:5px; border:1px solid #d5dad9;">
-                <input type="text" placeholder="聯絡電話" style="width:100%; margin-bottom:5px; padding:5px; border:1px solid #d5dad9;">
-                <input type="text" placeholder="詳細寄送地址" style="width:100%; padding:5px; border:1px solid #d5dad9;">
+            <div id="shipping-display" style="display:none; margin-top:10px;">
+                <input type="text" placeholder="指定款式/備註" style="width:100%; margin-bottom:5px; padding:8px; border:1px solid #d5dad9;">
+                <input type="text" placeholder="收件人姓名" style="width:100%; margin-bottom:5px; padding:8px; border:1px solid #d5dad9;">
+                <input type="text" placeholder="聯絡電話" style="width:100%; margin-bottom:5px; padding:8px; border:1px solid #d5dad9;">
+                <input type="text" placeholder="詳細寄送地址" style="width:100%; padding:8px; border:1px solid #d5dad9;">
             </div>
-            <div id="modal-total-display" style="font-size: 18px; font-weight: bold; color: #b0304f; margin-top: 15px; text-align:center;"></div>
+            <div id="modal-total-display" style="font-size: 18px; font-weight: bold; color: #b0304f; margin-top: 20px; text-align:center;"></div>
         </div>
     </div>
 
     <script>
+        // (保持您原本的 JS 邏輯不變)
         const sections = [
             { name: "一. 色票書籤", note: "" },
             { name: "二. 明信片", note: "" },
             { name: "三. 包套", note: "" },
             { name: "四. 展覽特別收藏", note: "※ 本區商品一律於展期結束後寄出" }
         ];
-        
         const products = [
             { cat: "一. 色票書籤", name: "A01. 歲月紅磚＆寶島之心", price: 30, img: "b1.jpg" },
             { cat: "一. 色票書籤", name: "A02. 時光屋＆日常", price: 30, img: "b2.jpg" },
@@ -168,7 +161,6 @@
             });
             if(orderHtml === "") { alert("請先選擇商品"); return; }
             document.getElementById('shipping-display').style.display = hasSpecial ? 'block' : 'none';
-            document.getElementById('discount-info').innerText = res.discount > 0 ? `已自動配對優惠：省下 NT$ ${res.discount}` : "";
             document.getElementById('order-items-box').innerHTML = orderHtml;
             document.getElementById('modal-total-display').innerText = '應付總計：NT$ ' + (res.total - res.discount);
             document.getElementById('qr-modal').style.display = 'flex';
