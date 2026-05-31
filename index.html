@@ -12,12 +12,23 @@
         .container { padding: 16px; }
         .section-title { font-size: 18px; color: #525252; font-weight: bold; margin: 24px 0 12px 0; padding-left: 8px; border-left: 4px solid #525252; }
         .section-note { font-size: 13px; color: #b0304f; font-weight: bold; margin-left: 8px; margin-bottom: 5px; }
-        .product-card { background: #ffffff; border: 2px solid #d5dad9; border-radius: 12px; padding: 16px; margin-bottom: 16px; display: flex; align-items: center; }
-        .product-inline-img { width: 85px; height: 85px; border: 1px solid #d5dad9; border-radius: 8px; margin-right: 14px; object-fit: cover; cursor: pointer; }
+        
+        /* 調整後的卡片樣式 */
+        .product-card { 
+            background: #ffffff; border: 2px solid #d5dad9; border-radius: 12px; padding: 16px; margin-bottom: 16px; 
+            display: flex; align-items: center; gap: 16px; 
+        }
+        @media (max-width: 480px) {
+            .product-card { flex-direction: column; align-items: flex-start; }
+            .product-info { width: 100%; margin-bottom: 12px; }
+            .counter-box { align-self: flex-end; }
+        }
+
+        .product-inline-img { width: 85px; height: 85px; border: 1px solid #d5dad9; border-radius: 8px; object-fit: cover; cursor: pointer; }
         .product-info { flex-grow: 1; }
         .product-name { font-size: 15px; font-weight: bold; margin-bottom: 2px; }
         .product-subname { font-size: 13px; color: #888; margin-bottom: 4px; }
-        .product-price { font-size: 15px; font-weight: bold; color: #b0304f; }
+        .product-price { font-size: 15px; font-weight: bold; color: #b0304f; margin-top: 4px; }
         .limited-tag { font-size: 11px; background-color: #b0304f; color: #ffffff; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: inline-block; margin: 0 4px 4px 0; }
         .preorder-tag { font-size: 11px; background-color: #525252; color: #ffffff; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: inline-block; margin: 0 4px 4px 0; }
         .counter-box { display: flex; align-items: center; border: 2px solid #d5dad9; border-radius: 8px; }
@@ -35,7 +46,6 @@
     </style>
 </head>
 <body>
-
     <div class="header"><img src="s2.png" class="brand-logo" alt="logo"></div>
     <div class="container" id="container-content"></div>
 
@@ -44,9 +54,7 @@
         <button class="btn-submit" onclick="generateOrderList()">確認點餐</button>
     </div>
 
-    <div class="modal" id="big-img-modal" onclick="closeBigImg()">
-        <div class="modal-content"><img id="big-img-src" class="big-img"></div>
-    </div>
+    <div class="modal" id="big-img-modal" onclick="closeBigImg()"><div class="modal-content"><img id="big-img-src" class="big-img"></div></div>
 
     <div class="modal" id="qr-modal">
         <div class="checkout-content">
