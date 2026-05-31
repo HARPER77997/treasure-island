@@ -27,7 +27,8 @@
         .product-price { font-size: 15px; font-weight: bold; color: #b0304f; }
         .note { font-size: 12px; color: #b0304f; font-weight: bold; margin-top: 2px; }
         
-        .limited-tag { font-size: 11px; background-color: #d8c6b0; color: #ffffff; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: inline-block; margin-bottom: 4px; margin-right: 4px; }
+        /* 統一改為紅色系的限量標籤 */
+        .limited-tag { font-size: 11px; background-color: #b0304f; color: #ffffff; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: inline-block; margin-bottom: 4px; margin-right: 4px; }
         .preorder-tag { font-size: 11px; background-color: #525252; color: #ffffff; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: inline-block; margin-bottom: 4px; margin-right: 4px; }
         
         .counter-box { display: flex; align-items: center; border: 2px solid #d5dad9; border-radius: 8px; background: #fdfdfd; }
@@ -79,9 +80,9 @@
         <div class="product-card" data-category="四. 包套" data-name="色票書籤一組" data-price="130" data-img="b_set.jpg">
             <img src="b_set.jpg" class="product-inline-img" onclick="showBigImg('b_set.jpg')">
             <div class="product-info">
+                <div class="limited-tag">限量</div>
                 <div class="product-name">色票書籤一組</div>
                 <div class="product-subname" style="color:#888;">5張</div>
-                <div class="limited-tag">限量</div>
                 <div class="product-price">NT$ 130</div>
             </div>
             <div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div>
@@ -89,9 +90,9 @@
         <div class="product-card" data-category="四. 包套" data-name="明信片一組" data-price="300" data-img="p_set.jpg">
             <img src="p_set.jpg" class="product-inline-img" onclick="showBigImg('p_set.jpg')">
             <div class="product-info">
+                <div class="limited-tag">限量</div>
                 <div class="product-name">明信片一組</div>
                 <div class="product-subname" style="color:#888;">11張</div>
-                <div class="limited-tag">限量</div>
                 <div class="product-price">NT$ 300</div>
             </div>
             <div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div>
@@ -99,8 +100,8 @@
         <div class="product-card" data-category="四. 包套" data-name="寶島全套" data-price="400" data-img="bundle_all.jpg">
             <img src="bundle_all.jpg" class="product-inline-img" onclick="showBigImg('bundle_all.jpg')">
             <div class="product-info">
-                <div class="product-name">寶島全套</div>
                 <div class="limited-tag">限量</div>
+                <div class="product-name">寶島全套</div>
                 <div class="product-price">NT$ 400</div>
             </div>
             <div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div>
