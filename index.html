@@ -16,18 +16,19 @@
         
         .input-box { background: #ffffff; border: 1px solid #525252; padding: 15px; border-radius: 12px; margin: 20px 0; }
         .input-box label { display: block; font-size: 14px; font-weight: bold; margin-bottom: 5px; color: #2b302f; }
-        .input-box p { font-size: 12px; color: #666; margin-bottom: 10px; font-style: italic; }
         .input-box input { width: 100%; padding: 10px; border: 1px solid #d5dad9; border-radius: 6px; font-size: 14px; margin-bottom: 10px; }
         
         .product-card { background: #ffffff; border: 2px solid #d5dad9; border-radius: 12px; padding: 16px; margin-bottom: 16px; display: flex; align-items: center; }
         .product-inline-img { width: 85px !important; height: 85px !important; border: 1px solid #d5dad9; border-radius: 8px; margin-right: 14px; flex-shrink: 0; object-fit: cover; object-position: center; cursor: pointer; }
         
         .product-info { flex-grow: 1; }
-        .product-name { font-size: 15px; font-weight: bold; color: #2b302f; margin-bottom: 4px; }
-        .stock-tag { font-size: 11px; background-color: #fff8f9; color: #b0304f; padding: 2px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #b0304f; display: inline-block; margin-bottom: 6px; }
+        .product-name { font-size: 15px; font-weight: bold; color: #2b302f; margin-bottom: 2px; }
+        .product-subname { font-size: 13px; color: #888; margin-bottom: 6px; }
         .product-price { font-size: 15px; font-weight: bold; color: #b0304f; }
         .note { font-size: 12px; color: #b0304f; font-weight: bold; margin-top: 2px; }
-        .limited-tag { font-size: 11px; background-color: #d8c6b0; color: #ffffff; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: inline-block; margin-bottom: 4px; }
+        
+        .limited-tag { font-size: 11px; background-color: #d8c6b0; color: #ffffff; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: inline-block; margin-bottom: 4px; margin-right: 4px; }
+        .preorder-tag { font-size: 11px; background-color: #525252; color: #ffffff; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: inline-block; margin-bottom: 4px; margin-right: 4px; }
         
         .counter-box { display: flex; align-items: center; border: 2px solid #d5dad9; border-radius: 8px; background: #fdfdfd; }
         .btn-counter { width: 40px; height: 40px; background: none; border: none; font-size: 20px; font-weight: bold; color: #525252; cursor: pointer; }
@@ -75,15 +76,81 @@
         <div class="product-card" data-category="三. 組合" data-name="大小組合(各1張)" data-price="50" data-img="bundle_2.jpg"><img src="bundle_2.jpg" class="product-inline-img" onclick="showBigImg('bundle_2.jpg')"><div class="product-info"><div class="product-name">大小組合 (各1張)</div><div class="product-price">NT$ 50</div></div><div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div></div>
 
         <div class="section-title">四. 包套</div>
-        <div class="product-card" data-category="四. 包套" data-name="色票書籤一組(5張)" data-price="130" data-img="b_set.jpg"><img src="b_set.jpg" class="product-inline-img" onclick="showBigImg('b_set.jpg')"><div class="product-info"><div class="product-name">色票書籤一組 (5張)</div><div class="stock-tag">限量</div><div class="product-price">NT$ 130</div></div><div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div></div>
-        <div class="product-card" data-category="四. 包套" data-name="明信片一組(11張)" data-price="300" data-img="p_set.jpg"><img src="p_set.jpg" class="product-inline-img" onclick="showBigImg('p_set.jpg')"><div class="product-info"><div class="product-name">明信片一組 (11張)</div><div class="stock-tag">限量</div><div class="product-price">NT$ 300</div></div><div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div></div>
-        <div class="product-card" data-category="四. 包套" data-name="寶島全套" data-price="400" data-img="bundle_all.jpg"><img src="bundle_all.jpg" class="product-inline-img" onclick="showBigImg('bundle_all.jpg')"><div class="product-info"><div class="product-name">寶島全套</div><div class="stock-tag">限量</div><div class="product-price">NT$ 400</div></div><div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div></div>
+        <div class="product-card" data-category="四. 包套" data-name="色票書籤一組" data-price="130" data-img="b_set.jpg">
+            <img src="b_set.jpg" class="product-inline-img" onclick="showBigImg('b_set.jpg')">
+            <div class="product-info">
+                <div class="product-name">色票書籤一組</div>
+                <div class="product-subname" style="color:#888;">5張</div>
+                <div class="limited-tag">限量</div>
+                <div class="product-price">NT$ 130</div>
+            </div>
+            <div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div>
+        </div>
+        <div class="product-card" data-category="四. 包套" data-name="明信片一組" data-price="300" data-img="p_set.jpg">
+            <img src="p_set.jpg" class="product-inline-img" onclick="showBigImg('p_set.jpg')">
+            <div class="product-info">
+                <div class="product-name">明信片一組</div>
+                <div class="product-subname" style="color:#888;">11張</div>
+                <div class="limited-tag">限量</div>
+                <div class="product-price">NT$ 300</div>
+            </div>
+            <div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div>
+        </div>
+        <div class="product-card" data-category="四. 包套" data-name="寶島全套" data-price="400" data-img="bundle_all.jpg">
+            <img src="bundle_all.jpg" class="product-inline-img" onclick="showBigImg('bundle_all.jpg')">
+            <div class="product-info">
+                <div class="product-name">寶島全套</div>
+                <div class="limited-tag">限量</div>
+                <div class="product-price">NT$ 400</div>
+            </div>
+            <div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div>
+        </div>
 
         <div class="section-title">五. 展覽特別收藏</div>
-        <div class="product-card" data-category="五. 展覽特別收藏" data-name="《寶島散步》展期展示書" data-price="8000" data-img="exhibit.jpg"><img src="exhibit.jpg" class="product-inline-img" onclick="showBigImg('exhibit.jpg')"><div class="product-info"><div class="limited-tag">展場限定</div><div class="product-name">《寶島散步》展期展示書</div><div class="note">※ 展期結束後寄出</div><div class="product-price">NT$ 8000</div></div><div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div></div>
-        <div class="product-card" data-category="五. 展覽特別收藏" data-name="預購《寶島散步》全新精裝書" data-price="10000" data-img="preorder.jpg"><img src="preorder.jpg" class="product-inline-img" onclick="showBigImg('preorder.jpg')"><div class="product-info"><div class="limited-tag">展場限定</div><div class="product-name">預購《寶島散步》全新精裝書</div><div class="note">※ 附特典全套</div><div class="product-price">NT$ 10000</div></div><div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div></div>
-        <div class="product-card" data-category="五. 展覽特別收藏" data-name="《寶島散步》A5棉紙藝術微噴相片" data-price="300" data-img="frame_a5.jpg"><img src="frame_a5.jpg" class="product-inline-img" onclick="showBigImg('frame_a5.jpg')"><div class="product-info"><div class="limited-tag">展場限定</div><div class="product-name">《寶島散步》A5棉紙藝術微噴相片</div><div class="note">※ 展期結束後寄出</div><div class="product-price">NT$ 300</div></div><div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div></div>
-        <div class="product-card" data-category="五. 展覽特別收藏" data-name="《寶島散步》A4棉紙藝術微噴相片" data-price="500" data-img="frame_a4.jpg"><img src="frame_a4.jpg" class="product-inline-img" onclick="showBigImg('frame_a4.jpg')"><div class="product-info"><div class="limited-tag">展場限定</div><div class="product-name">《寶島散步》A4棉紙藝術微噴相片</div><div class="note">※ 展期結束後寄出</div><div class="product-price">NT$ 500</div></div><div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div></div>
+        <div class="product-card" data-category="五. 展覽特別收藏" data-name="《寶島散步》展期展示書" data-price="8000" data-img="exhibit.jpg">
+            <img src="exhibit.jpg" class="product-inline-img" onclick="showBigImg('exhibit.jpg')">
+            <div class="product-info">
+                <div class="limited-tag">限量</div>
+                <div class="product-name">《寶島散步》</div>
+                <div class="product-subname">展期展示書</div>
+                <div class="note">※ 展期結束後寄出</div>
+                <div class="product-price">NT$ 8000</div>
+            </div>
+            <div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div>
+        </div>
+        <div class="product-card" data-category="五. 展覽特別收藏" data-name="預購《寶島散步》全新精裝書" data-price="10000" data-img="preorder.jpg">
+            <img src="preorder.jpg" class="product-inline-img" onclick="showBigImg('preorder.jpg')">
+            <div class="product-info">
+                <div class="limited-tag">限量</div><div class="preorder-tag">預購</div>
+                <div class="product-name">《寶島散步》</div>
+                <div class="product-subname">全新精裝書</div>
+                <div class="note">※ 附特典全套</div>
+                <div class="product-price">NT$ 10000</div>
+            </div>
+            <div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div>
+        </div>
+        <div class="product-card" data-category="五. 展覽特別收藏" data-name="《寶島散步》A5棉紙藝術微噴相片" data-price="300" data-img="frame_a5.jpg">
+            <img src="frame_a5.jpg" class="product-inline-img" onclick="showBigImg('frame_a5.jpg')">
+            <div class="product-info">
+                <div class="limited-tag">限量</div>
+                <div class="product-name">《寶島散步》</div>
+                <div class="product-subname">A5棉紙藝術微噴相片</div>
+                <div class="note">※ 展期結束後寄出</div>
+                <div class="product-price">NT$ 300</div>
+            </div>
+            <div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div>
+        </div>
+        <div class="product-card" data-category="五. 展覽特別收藏" data-name="《寶島散步》A4棉紙藝術微噴相片" data-price="500" data-img="frame_a4.jpg">
+            <img src="frame_a4.jpg" class="product-inline-img" onclick="showBigImg('frame_a4.jpg')">
+            <div class="product-info">
+                <div class="limited-tag">限量</div>
+                <div class="product-name">《寶島散步》</div>
+                <div class="product-subname">A4棉紙藝術微噴相片</div>
+                <div class="note">※ 展期結束後寄出</div>
+                <div class="product-price">NT$ 500</div>
+            </div>
+            <div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div>
+        </div>
     </div>
 
     <div class="modal" id="big-img-modal">
@@ -137,9 +204,7 @@
                 } 
             }); 
             if (!hasItems) { alert('您尚未選擇任何商品喔！'); return; } 
-            
             document.getElementById('shipping-display').style.display = hasSpecial ? 'block' : 'none';
-            
             if (hasBundle) {
                 const bInput = document.getElementById('bookmark-input').value;
                 const pInput = document.getElementById('postcard-input').value;
