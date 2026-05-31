@@ -13,15 +13,15 @@
         .section-title { font-size: 18px; color: #525252; font-weight: bold; margin: 24px 0 12px 0; padding-left: 8px; border-left: 4px solid #525252; }
         .section-note { font-size: 13px; color: #b0304f; font-weight: bold; margin-left: 8px; margin-bottom: 5px; }
         
-        /* 調整後的卡片樣式 */
+        /* 調整後的卡片樣式：手機版垂直堆疊，增加間距 */
         .product-card { 
             background: #ffffff; border: 2px solid #d5dad9; border-radius: 12px; padding: 16px; margin-bottom: 16px; 
             display: flex; align-items: center; gap: 16px; 
         }
         @media (max-width: 480px) {
-            .product-card { flex-direction: column; align-items: flex-start; }
-            .product-info { width: 100%; margin-bottom: 12px; }
-            .counter-box { align-self: flex-end; }
+            .product-card { flex-direction: column; align-items: stretch; }
+            .product-info { width: 100%; }
+            .counter-box { margin-top: 16px; align-self: flex-end; }
         }
 
         .product-inline-img { width: 85px; height: 85px; border: 1px solid #d5dad9; border-radius: 8px; object-fit: cover; cursor: pointer; }
@@ -31,11 +31,13 @@
         .product-price { font-size: 15px; font-weight: bold; color: #b0304f; margin-top: 4px; }
         .limited-tag { font-size: 11px; background-color: #b0304f; color: #ffffff; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: inline-block; margin: 0 4px 4px 0; }
         .preorder-tag { font-size: 11px; background-color: #525252; color: #ffffff; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: inline-block; margin: 0 4px 4px 0; }
-        .counter-box { display: flex; align-items: center; border: 2px solid #d5dad9; border-radius: 8px; }
+        .counter-box { display: flex; align-items: center; border: 2px solid #d5dad9; border-radius: 8px; width: fit-content; }
         .btn-counter { width: 40px; height: 40px; border: none; background: none; font-size: 20px; font-weight: bold; color: #525252; cursor: pointer; }
         .count-num { width: 35px; text-align: center; font-size: 16px; font-weight: bold; }
+        
         .footer-cart { position: fixed; bottom: 0; left: 0; right: 0; background: #ffffff; border-top: 3px solid #525252; padding: 16px 20px; z-index: 99; display: flex; align-items: center; justify-content: space-between; }
         .btn-submit { background-color: #525252; color: #ffffff; border: none; padding: 14px 32px; font-weight: bold; border-radius: 8px; }
+        
         .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 300; align-items: center; justify-content: center; padding: 15px; }
         .modal-content { width: 100%; max-width: 400px; aspect-ratio: 1 / 1; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 12px; }
         .big-img { width: 100%; height: 100%; object-fit: cover; }
@@ -46,6 +48,7 @@
     </style>
 </head>
 <body>
+
     <div class="header"><img src="s2.png" class="brand-logo" alt="logo"></div>
     <div class="container" id="container-content"></div>
 
@@ -54,7 +57,9 @@
         <button class="btn-submit" onclick="generateOrderList()">確認點餐</button>
     </div>
 
-    <div class="modal" id="big-img-modal" onclick="closeBigImg()"><div class="modal-content"><img id="big-img-src" class="big-img"></div></div>
+    <div class="modal" id="big-img-modal" onclick="closeBigImg()">
+        <div class="modal-content"><img id="big-img-src" class="big-img"></div>
+    </div>
 
     <div class="modal" id="qr-modal">
         <div class="checkout-content">
