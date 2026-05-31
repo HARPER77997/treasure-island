@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寶島散步 - 現場掃碼點餐</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-user-select: none; }
+        body { font-family: '-apple-system', 'BlinkMacSystemFont', 'PingFang TC', 'Heiti TC', sans-serif; background-color: #f8faf9; color: #2b302f; padding-bottom: 120px; }
+        
+        .header { background-color: #525252; padding: 12px 20px; text-align: center; position: sticky; top: 0; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .brand-logo { height: 80px; width: auto; max-width: 90%; object-fit: contain; }
+        
+        .container { padding: 16px; }
+        .section-title { font-size: 18px; color: #525252; font-weight: bold; margin: 24px 0 12px 0; padding-left: 8px; border-left: 4px solid #525252; }
+        
+        .input-box { background: #ffffff; border: 1px solid #525252; padding: 15px; border-radius: 12px; margin: 20px 0; }
+        .input-box label { display: block; font-size: 14px; font-weight: bold; margin-bottom: 5px; color: #2b302f; }
+        .input-box p { font-size: 12px; color: #666; margin-bottom: 10px; font-style: italic; }
+        .input-box input { width: 100%; padding: 10px; border: 1px solid #d5dad9; border-radius: 6px; font-size: 14px; margin-bottom: 10px; }
+        
+        .product-card { background: #ffffff; border: 2px solid #d5dad9; border-radius: 12px; padding: 16px; margin-bottom: 16px; display: flex; align-items: center; }
+        .product-inline-img { width: 85px !important; height: 85px !important; border: 1px solid #d5dad9; border-radius: 8px; margin-right: 14px; flex-shrink: 0; object-fit: cover; object-position: center; cursor: pointer; }
+        
+        .product-info { flex-grow: 1; }
+        .product-name { font-size: 15px; font-weight: bold; color: #2b302f; margin-bottom: 4px; }
+        .stock-tag { font-size: 11px; background-color: #fff8f9; color: #b0304f; padding: 2px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #b0304f; display: inline-block; margin-bottom: 6px; }
+        .product-price { font-size: 15px; font-weight: bold; color: #b0304f; }
+        .note { font-size: 12px; color: #b0304f; font-weight: bold; margin-top: 2px; }
+        .limited-tag { font-size: 11px; background-color: #d8c6b0; color: #ffffff; padding: 2px 8px; border-radius: 4px; font-weight: bold; display: inline-block; margin-bottom: 4px; }
+        
+        .counter-box { display: flex; align-items: center; border: 2px solid #d5dad9; border-radius: 8px; background: #fdfdfd; }
+        .btn-counter { width: 40px; height: 40px; background: none; border: none; font-size: 20px; font-weight: bold; color: #525252; cursor: pointer; }
+        .count-num { width: 35px; text-align: center; font-size: 16px; font-weight: bold; color: #2b302f; }
+
+        .footer-cart { position: fixed; bottom: 0; left: 0; right: 0; background: #ffffff; border-top: 3px solid #525252; padding: 16px 20px; z-index: 99; display: flex; align-items: center; justify-content: space-between; }
+        .btn-submit { background-color: #525252; color: #ffffff; border: none; padding: 14px 32px; font-size: 16px; font-weight: bold; border-radius: 8px; letter-spacing: 1px; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 300; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: transparent; width: 100%; max-width: 500px; padding: 0; border: none; position: relative; display: flex; justify-content: center; }
+        .close-x { position: absolute; top: -50px; right: 0; font-size: 40px; font-weight: bold; color: #ffffff; cursor: pointer; z-index: 1000; line-height: 1; }
+        .big-img { width: 450px; height: 450px; object-fit: cover; display: block; max-width: 90vw; max-height: 90vw; }
+        
+        .checkout-content { background: #ffffff; padding: 25px; border-radius: 16px; width: 100%; max-width: 400px; position: relative; max-height: 90vh; overflow-y: auto; }
+        .order-box { text-align: left; background: #f8faf9; padding: 10px; border-radius: 8px; border: 1px solid #d5dad9; font-size: 14px; margin-top: 15px; }
+        .cat-title { font-size: 14px; font-weight: bold; color: #525252; margin-top: 10px; border-bottom: 1px solid #d5dad9; padding-bottom: 2px; }
+        .order-item { display: flex; align-items: center; padding: 6px 0; }
+        .modal-img { width: 40px !important; height: 40px !important; border-radius: 4px; margin-right: 10px; object-fit: cover; }
+        .shipping-info-box { background: #fff5eb; padding: 10px; border-radius: 8px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="header"><img src="s2.png" class="brand-logo" alt="寶島散步 Logo"></div>
+
+    <div class="container">
+        <div class="section-title">一. 色票書籤</div>
+        <script>
+            const b = ["A01. 歲月紅磚＆寶島之心", "A02. 時光屋＆日常", "A03. 亂中有序＆生命力", "A04. 朦朧藍＆觀景窗", "A05. 溫柔鄉＆前後浪"];
+            b.forEach((n, i) => { document.write(`<div class="product-card" data-category="一. 色票書籤" data-name="${n}" data-price="30" data-img="b${i+1}.jpg"><img src="b${i+1}.jpg" class="product-inline-img" onclick="showBigImg('b${i+1}.jpg')"><div class="product-info"><div class="product-name">${n}</div><div class="product-price">NT$ 30</div></div><div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div></div>`); });
+        </script>
+
+        <div class="section-title">二. 明信片</div>
+        <script>
+            const p = ["B01. 愛排隊", "B02. 美而美", "B03. 便利超商", "B04. 攤販叫賣", "B05. 運動器材", "B06. 鹽酥雞", "B07. 製作中", "B08. 祖孫買胡椒餅", "B09. 棉花糖", "B10. 陽台外推", "B11. 補習班"];
+            p.forEach((n, i) => { document.write(`<div class="product-card" data-category="二. 明信片" data-name="${n}" data-price="30" data-img="p${i+1}.jpg"><img src="p${i+1}.jpg" class="product-inline-img" onclick="showBigImg('p${i+1}.jpg')"><div class="product-info"><div class="product-name">${n}</div><div class="product-price">NT$ 30</div></div><div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div></div>`); });
+        </script>
+
+        <div class="section-title">三. 組合</div>
+        <div class="input-box">
+            <label>請填寫您選擇的款式編號:</label>
+            <input type="text" id="bookmark-input" placeholder="書籤編號 (如: A01, A03)">
+            <input type="text" id="postcard-input" placeholder="明信片編號 (如: B01, B03)">
+        </div>
+        <div class="product-card" data-category="三. 組合" data-name="大小組合(各1張)" data-price="50" data-img="bundle_2.jpg"><img src="bundle_2.jpg" class="product-inline-img" onclick="showBigImg('bundle_2.jpg')"><div class="product-info"><div class="product-name">大小組合 (各1張)</div><div class="product-price">NT$ 50</div></div><div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div></div>
+
+        <div class="section-title">四. 包套</div>
+        <div class="product-card" data-category="四. 包套" data-name="色票書籤一組(5張)" data-price="130" data-img="b_set.jpg"><img src="b_set.jpg" class="product-inline-img" onclick="showBigImg('b_set.jpg')"><div class="product-info"><div class="product-name">色票書籤一組 (5張)</div><div class="stock-tag">數量有限，售完為止</div><div class="product-price">NT$ 130</div></div><div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div></div>
+        <div class="product-card" data-category="四. 包套" data-name="明信片一組(11張)" data-price="300" data-img="p_set.jpg"><img src="p_set.jpg" class="product-inline-img" onclick="showBigImg('p_set.jpg')"><div class="product-info"><div class="product-name">明信片一組 (11張)</div><div class="stock-tag">數量有限，售完為止</div><div class="product-price">NT$ 300</div></div><div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div></div>
+        <div class="product-card" data-category="四. 包套" data-name="寶島全套" data-price="400" data-img="bundle_all.jpg"><img src="bundle_all.jpg" class="product-inline-img" onclick="showBigImg('bundle_all.jpg')"><div class="product-info"><div class="product-name">寶島全套</div><div class="stock-tag">數量有限，售完為止</div><div class="product-price">NT$ 400</div></div><div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div></div>
+
+        <div class="section-title">五. 展覽特別收藏</div>
+        <div class="product-card" data-category="五. 展覽特別收藏" data-name="《寶島散步》展期展示書" data-price="8000" data-img="exhibit.jpg"><img src="exhibit.jpg" class="product-inline-img" onclick="showBigImg('exhibit.jpg')"><div class="product-info"><div class="limited-tag">展場限定</div><div class="product-name">《寶島散步》展期展示書</div><div class="note">※ 展期結束後寄出</div><div class="product-price">NT$ 8000</div></div><div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div></div>
+        <div class="product-card" data-category="五. 展覽特別收藏" data-name="預購《寶島散步》全新精裝書" data-price="10000" data-img="preorder.jpg"><img src="preorder.jpg" class="product-inline-img" onclick="showBigImg('preorder.jpg')"><div class="product-info"><div class="limited-tag">展場限定</div><div class="product-name">預購《寶島散步》全新精裝書</div><div class="note">※ 附特典全套</div><div class="product-price">NT$ 10000</div></div><div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div></div>
+        <div class="product-card" data-category="五. 展覽特別收藏" data-name="《寶島散步》A5棉紙藝術微噴相片" data-price="300" data-img="frame_a5.jpg"><img src="frame_a5.jpg" class="product-inline-img" onclick="showBigImg('frame_a5.jpg')"><div class="product-info"><div class="limited-tag">展場限定</div><div class="product-name">《寶島散步》A5棉紙藝術微噴相片</div><div class="note">※ 展期結束後寄出</div><div class="product-price">NT$ 300</div></div><div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div></div>
+        <div class="product-card" data-category="五. 展覽特別收藏" data-name="《寶島散步》A4棉紙藝術微噴相片" data-price="500" data-img="frame_a4.jpg"><img src="frame_a4.jpg" class="product-inline-img" onclick="showBigImg('frame_a4.jpg')"><div class="product-info"><div class="limited-tag">展場限定</div><div class="product-name">《寶島散步》A4棉紙藝術微噴相片</div><div class="note">※ 展期結束後寄出</div><div class="product-price">NT$ 500</div></div><div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div></div>
+    </div>
+
+    <div class="modal" id="big-img-modal">
+        <div class="modal-content">
+            <span class="close-x" onclick="closeBigImg()">×</span>
+            <img id="big-img-src" src="" class="big-img">
+        </div>
+    </div>
+
+    <div class="footer-cart">
+        <div class="total-info"><span style="font-size:13px; color:#8fa09c; font-weight: bold;">總計金額</span><br><span style="font-size: 24px; font-weight: bold; color: #b0304f;" id="total-amount">NT$ 0</span></div>
+        <button class="btn-submit" onclick="generateOrderList()">確認點餐</button>
+    </div>
+
+    <div class="modal" id="qr-modal">
+        <div class="checkout-content">
+            <span class="close-x" onclick="closeModal()" style="color:#525252; top:10px; right:15px;">×</span>
+            <div style="font-size: 18px; font-weight: bold; color:#525252; text-align:center; margin-bottom:5px;">您的點餐明細</div>
+            <div style="font-size: 14px; color:#525252; text-align:center; margin-bottom:15px;">✦ 請出示畫面予顧展人員購買 ✦</div>
+            <div id="user-input-display" style="font-size: 14px; margin-bottom:10px; color:#24326b;"></div>
+            
+            <div id="shipping-display" class="shipping-info-box" style="display:none;">
+                <div style="font-weight:bold; margin-bottom:5px; color:#b0304f;">● 購買資訊 (請填寫後截圖)</div>
+                <input type="text" placeholder="指定款式/備註" style="width:100%; margin-bottom:5px; padding:5px;">
+                <input type="text" placeholder="收件人姓名" style="width:100%; margin-bottom:5px; padding:5px;">
+                <input type="text" placeholder="聯絡電話" style="width:100%; margin-bottom:5px; padding:5px;">
+                <input type="text" placeholder="詳細寄送地址" style="width:100%; padding:5px;">
+            </div>
+
+            <div class="order-box" id="order-items-box"></div>
+            <div id="modal-total-display" style="font-size: 18px; font-weight: bold; color: #b0304f; margin-top: 10px; text-align:center;"></div>
+        </div>
+    </div>
+
+    <script>
+        function showBigImg(src) { document.getElementById('big-img-src').src = src; document.getElementById('big-img-modal').style.display = 'flex'; }
+        function closeBigImg() { document.getElementById('big-img-modal').style.display = 'none'; }
+        function changeCount(button, val) { const countDiv = button.parentElement.querySelector('.count-num'); let currentCount = parseInt(countDiv.innerText) + val; if (currentCount < 0) currentCount = 0; countDiv.innerText = currentCount; calculateTotal(); }
+        function calculateTotal() { let total = 0; document.querySelectorAll('.product-card').forEach(card => { const price = parseInt(card.getAttribute('data-price')); const count = parseInt(card.querySelector('.count-num').innerText); total += price * count; }); document.getElementById('total-amount').innerText = 'NT$ ' + total; }
+        function generateOrderList() { 
+            let groups = {}; let total = 0; let hasItems = false; let hasBundle = false; let hasSpecial = false;
+            document.querySelectorAll('.product-card').forEach(card => { 
+                const count = parseInt(card.querySelector('.count-num').innerText); 
+                if (count > 0) { 
+                    hasItems = true; const cat = card.getAttribute('data-category'); 
+                    if (cat === "三. 組合") hasBundle = true;
+                    if (cat === "五. 展覽特別收藏") hasSpecial = true;
+                    if (!groups[cat]) groups[cat] = []; 
+                    groups[cat].push({ name: card.getAttribute('data-name'), count: count, img: card.getAttribute('data-img') }); 
+                    total += parseInt(card.getAttribute('data-price')) * count; 
+                } 
+            }); 
+            if (!hasItems) { alert('您尚未選擇任何商品喔！'); return; } 
+            
+            document.getElementById('shipping-display').style.display = hasSpecial ? 'block' : 'none';
+            
+            if (hasBundle) {
+                const bInput = document.getElementById('bookmark-input').value;
+                const pInput = document.getElementById('postcard-input').value;
+                document.getElementById('user-input-display').innerHTML = `書籤編號: ${bInput || '無'}<br>明信片編號: ${pInput || '無'}`;
+            } else {
+                document.getElementById('user-input-display').innerHTML = "";
+            }
+            let boxHtml = ""; for (let cat in groups) { boxHtml += `<div class="cat-title">${cat}</div>`; groups[cat].forEach(item => { boxHtml += `<div class="order-item"><img src="${item.img}" class="modal-img"><span>${item.name} × ${item.count}</span></div>`; }); } 
+            document.getElementById('order-items-box').innerHTML = boxHtml; 
+            document.getElementById('modal-total-display').innerText = '應付總計：NT$ ' + total; 
+            document.getElementById('qr-modal').style.display = 'flex'; 
+        }
+        function closeModal() { document.getElementById('qr-modal').style.display = 'none'; }
+    </script>
+</body>
+</html>
