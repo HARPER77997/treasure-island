@@ -6,7 +6,7 @@
     <title>寶島散步 - 現場掃碼點餐</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-user-select: none; }
-        body { font-family: '-apple-system', 'BlinkMacSystemFont', 'PingFang TC', 'Heiti TC', sans-serif; background-color: #f8faf9; color: #2b302f; padding-bottom: 120px; font-size: 16px; /* 設定基準字級 */ }
+        body { font-family: '-apple-system', 'BlinkMacSystemFont', 'PingFang TC', 'Heiti TC', sans-serif; background-color: #f8faf9; color: #2b302f; padding-bottom: 120px; font-size: 16px; }
         
         .header { background-color: #525252; padding: 12px 20px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .brand-logo { height: 80px; width: auto; max-width: 90%; }
@@ -15,7 +15,6 @@
         .section-title { font-size: 20px; color: #525252; font-weight: bold; margin: 24px 0 12px 0; padding-left: 8px; border-left: 4px solid #525252; }
         .section-note { font-size: 14px; color: #b0304f; font-weight: bold; margin-left: 8px; margin-bottom: 5px; }
         
-        /* 卡片與文字字級調整 */
         .product-card { 
             background: #ffffff; border: 2px solid #d5dad9; border-radius: 12px; padding: 16px; margin-bottom: 16px; 
             display: flex; align-items: center; gap: 14px; 
@@ -23,7 +22,6 @@
         .product-inline-img { width: 85px; height: 85px; border: 1px solid #d5dad9; border-radius: 8px; object-fit: cover; cursor: pointer; }
         .product-info { flex-grow: 1; min-width: 0; }
         
-        /* 品名字級設定為 16px (約 12pt)，確保清晰 */
         .product-name { font-size: 16px; font-weight: bold; margin-bottom: 4px; line-height: 1.4; }
         .product-subname { font-size: 14px; color: #888; margin-bottom: 4px; }
         .product-price { font-size: 16px; font-weight: bold; color: #b0304f; margin-top: 4px; }
@@ -39,11 +37,14 @@
         .footer-cart { position: fixed; bottom: 0; left: 0; right: 0; background: #ffffff; border-top: 3px solid #525252; padding: 16px 20px; z-index: 99; display: flex; align-items: center; justify-content: space-between; }
         .btn-submit { background-color: #525252; color: #ffffff; border: none; padding: 14px 32px; font-size: 16px; font-weight: bold; border-radius: 8px; }
         
-        /* 彈窗內容字級調整 */
-        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 300; align-items: center; justify-content: center; padding: 15px; }
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 300; align-items: center; justify-content: center; }
+        .modal-content { width: 90%; max-width: 400px; aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .big-img { width: 100%; height: 100%; object-fit: cover; }
+        
         .checkout-content { background: #ffffff; padding: 25px; border-radius: 16px; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; font-size: 15px; }
         .order-cat { font-size: 15px; font-weight: bold; color: #525252; margin-top: 15px; border-bottom: 1px solid #d5dad9; padding-bottom: 2px; }
-        .order-item { display: flex; align-items: center; padding: 10px 0; font-size: 15px; }
+        .order-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; font-size: 15px; border-bottom: 1px dashed #eee; }
+        .discount-row { color: #b0304f; font-weight: bold; text-align: right; padding: 10px 0; border-bottom: 1px solid #d5dad9; }
     </style>
 </head>
 <body>
@@ -57,11 +58,14 @@
     </div>
 
     <div class="modal" id="big-img-modal" onclick="closeBigImg()"><div class="modal-content"><img id="big-img-src" class="big-img"></div></div>
-    <div class="modal" id="qr-modal">
+    
+    <div class="modal" id="qr-modal" style="background: rgba(0,0,0,0.85);">
         <div class="checkout-content">
             <span style="float:right; font-size:24px; cursor:pointer;" onclick="closeModal()">×</span>
-            <div style="font-size: 18px; font-weight: bold; text-align:center; margin-bottom:10px;">點餐明細</div>
+            <div style="font-size: 18px; font-weight: bold; text-align:center; margin-bottom:5px;">點餐明細</div>
+            <div style="font-size: 14px; color:#525252; text-align:center; margin-bottom:15px;">✦ 請出示畫面予顧展人員購買 ✦</div>
             <div id="order-items-box"></div>
+            <div id="discount-display" class="discount-row" style="display:none;"></div>
             <div id="shipping-display" style="display:none; margin-top:10px;">
                 <input type="text" placeholder="指定款式/備註" style="width:100%; margin-bottom:5px; padding:8px; border:1px solid #d5dad9;">
                 <input type="text" placeholder="收件人姓名" style="width:100%; margin-bottom:5px; padding:8px; border:1px solid #d5dad9;">
@@ -73,13 +77,15 @@
     </div>
 
     <script>
-        // (保持您原本的 JS 邏輯不變)
         const sections = [
             { name: "一. 色票書籤", note: "" },
             { name: "二. 明信片", note: "" },
             { name: "三. 包套", note: "" },
             { name: "四. 展覽特別收藏", note: "※ 本區商品一律於展期結束後寄出" }
         ];
+
+        function formatName(name) { return name.replace("《寶島散步》", "《寶島散步》<br>"); }
+
         const products = [
             { cat: "一. 色票書籤", name: "A01. 歲月紅磚＆寶島之心", price: 30, img: "b1.jpg" },
             { cat: "一. 色票書籤", name: "A02. 時光屋＆日常", price: 30, img: "b2.jpg" },
@@ -111,13 +117,14 @@
             container.innerHTML += `<div class="section-title">${s.name}</div>`;
             if(s.note) container.innerHTML += `<div class="section-note">${s.note}</div>`;
             products.filter(p => p.cat === s.name).forEach(p => {
+                let displayName = formatName(p.name);
                 container.innerHTML += `<div class="product-card" data-category="${p.cat}" data-name="${p.name}" data-price="${p.price}" data-img="${p.img}">
                     <img src="${p.img}" class="product-inline-img" onclick="showBigImg('${p.img}')">
                     <div class="product-info">
                         ${p.tag ? `<div class="limited-tag">${p.tag}</div>` : ''}
                         ${p.pTag ? `<div class="preorder-tag">${p.pTag}</div>` : ''}
-                        <div class="product-name">${p.name}</div>
-                        ${p.note ? `<div class="product-subname" style="color:#b0304f; font-weight:bold;">${p.note}</div>` : ''}
+                        <div class="product-name">${displayName}</div>
+                        ${p.note ? `<div class="product-subname">${p.note}</div>` : ''}
                         <div class="product-price">NT$ ${p.price}</div>
                     </div>
                     <div class="counter-box"><button class="btn-counter" onclick="changeCount(this, -1)">-</button><div class="count-num">0</div><button class="btn-counter" onclick="changeCount(this, 1)">+</button></div>
@@ -153,13 +160,22 @@
                 document.querySelectorAll('.product-card').forEach(card => {
                     let count = parseInt(card.querySelector('.count-num').innerText);
                     if(count > 0 && card.getAttribute('data-category') === s.name) {
-                        catHtml += `<div class="order-item"><img src="${card.getAttribute('data-img')}" style="width:40px;height:40px;margin-right:10px;object-fit:cover;"> ${card.getAttribute('data-name')} x ${count}</div>`;
+                        catHtml += `<div class="order-item">
+                            <div style="display:flex; align-items:center;">
+                                <img src="${card.getAttribute('data-img')}" style="width:40px;height:40px;margin-right:10px;object-fit:cover;">
+                                <span>${card.getAttribute('data-name').replace("<br>", " ")} x ${count}</span>
+                            </div>
+                            <span>NT$ ${card.getAttribute('data-price') * count}</span>
+                        </div>`;
                         if(s.name === "四. 展覽特別收藏") hasSpecial = true;
                     }
                 });
                 if(catHtml !== "") orderHtml += `<div class="order-cat">${s.name}</div>` + catHtml;
             });
             if(orderHtml === "") { alert("請先選擇商品"); return; }
+            
+            document.getElementById('discount-display').style.display = res.discount > 0 ? 'block' : 'none';
+            document.getElementById('discount-display').innerText = res.discount > 0 ? `自動配對優惠：- NT$ ${res.discount}` : "";
             document.getElementById('shipping-display').style.display = hasSpecial ? 'block' : 'none';
             document.getElementById('order-items-box').innerHTML = orderHtml;
             document.getElementById('modal-total-display').innerText = '應付總計：NT$ ' + (res.total - res.discount);
